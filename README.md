@@ -2,15 +2,18 @@
 
 Which telecom customers are likely to leave, why, and what should the business do about it?
 
+![Power BI dashboard](powerbi/dashboard.png)
+
 **Tools:** Python (Pandas, Scikit-learn, Matplotlib), SQL (PostgreSQL), Power BI
 
 ## Business problem
 Acquiring a new customer costs far more than keeping an existing one. This project analyzes
-~7,000 telecom customers to (1) find which segments churn the most, (2) predict which customers
+7,043 telecom customers to (1) find which segments churn the most, (2) predict which customers
 are at risk, and (3) recommend a targeted retention action.
 
 ## Dataset
-IBM **Telco Customer Churn** dataset (7,043 customers, 21 columns). See `data/README.md` for download steps.
+IBM **Telco Customer Churn** dataset (7,043 customers, 21 columns). It is a public sample dataset,
+so results are illustrative rather than production-proven. See `data/README.md` for download steps.
 
 ## Project structure
 ```
@@ -38,40 +41,60 @@ SQL: create a PostgreSQL database, then run `sql/churn_analysis.sql` in psql
 (the `\copy` line loads the CSV).
 
 ## Approach
-1. **Cleaning:** converted `TotalCharges` to numeric (blank values for brand-new customers removed),
-   encoded the target as 0/1, merged "No internet service" / "No phone service" into "No".
-2. **SQL + EDA:** churn rate by contract, tenure group, payment method, internet service; revenue lost to churn.
-3. **Modelling:** logistic regression and random forest, stratified 80/20 split, `class_weight="balanced"`
-   because only ~27% of customers churn.
-4. **Evaluation:** ROC-AUC, precision, recall, F1. Accuracy alone is misleading with imbalanced classes.
-5. **Dashboard:** Power BI report built from `outputs/churn_predictions_for_powerbi.csv`.
+1. **Cleaning:** converted `TotalCharges` to numeric and dropped the 11 rows with blank values
+   (brand-new customers with zero tenure), leaving 7,032 customers. Encoded the target as 0/1 and
+   merged "No internet service" / "No phone service" into "No".
+2. **SQL + EDA:** churn rate by contract, tenure group, payment method and internet service;
+   share of monthly revenue lost to churn.
+3. **Modelling:** logistic regression and random forest, stratified 80/20 split,
+   `class_weight="balanced"` because only about 27% of customers churn.
+4. **Evaluation:** ROC-AUC, precision, recall, F1 on the held-out test set. Accuracy alone is
+   misleading with imbalanced classes, so it is not used as the headline metric.
+5. **Dashboard scoring:** churn probabilities in the Power BI file are **out-of-fold**
+   (5-fold cross-validation via `cross_val_predict`), so every customer is scored by a model that
+   never saw that customer during training.
+6. **Risk bands:** Low (< 0.30), Medium (0.30 to 0.60), High (> 0.60) churn probability.
 
-## Results (fill in after running)
+## Results
+Test set: 20% stratified holdout, default 0.5 decision threshold.
+
 | Model | ROC-AUC | Precision | Recall | F1 |
 |---|---|---|---|---|
-| Logistic Regression | | | | |
-| Random Forest | | | | |
+| Logistic Regression | TODO | TODO | TODO | TODO |
+| Random Forest | TODO | TODO | TODO | TODO |
+
+Best model: **TODO (name)**, with ROC-AUC of 0.84 and recall of 78% for the churn class.
 
 **Key findings**
-- Overall churn rate: _X%_
-- Month-to-month contracts churn at _X%_ vs _X%_ for two-year contracts
-- Customers in their first 12 months churn at _X%_
-- Top churn drivers: _1, 2, 3_
+- Overall churn rate: about 27% (1,869 of 7,043 customers)
+- Month-to-month contracts churn at 43% vs 3% for two-year contracts
+- Customers in their first 12 months churn at TODO%
+- About 30% of monthly revenue comes from customers who churned
+- Top churn drivers (feature importance): contract type, tenure, monthly charges
+
+**Risk bands (out-of-fold predictions)**
+
+| Band | Probability | Customers |
+|---|---|---|
+| Low | < 0.30 | TODO |
+| Medium | 0.30 to 0.60 | TODO |
+| High | > 0.60 | TODO |
 
 ## Recommendation
-_Example, adjust to your findings:_ target month-to-month customers in their first year with a
-retention offer (e.g. discount for moving to an annual contract), since this segment has the
-highest churn and a large share of monthly revenue.
+Target **first-year month-to-month customers** with a retention offer, for example a discount for
+moving to an annual contract. This segment has the highest churn rate and accounts for a large
+share of monthly revenue. Use the High-risk band to prioritise who receives the offer first.
 
 ## Power BI dashboard
-Load `outputs/churn_predictions_for_powerbi.csv` and build:
+Built from `outputs/churn_predictions_for_powerbi.csv`:
 - KPI cards: total customers, churn rate, monthly revenue at risk
-- Churn rate by Contract, Tenure group, Payment method (bar charts)
+- Churn rate by Contract, Tenure group and Payment method (bar charts)
 - Customers by risk band (Low / Medium / High) with a slicer
 - Table of High-risk customers sorted by `churn_probability`
 
-Add screenshots to `powerbi/` and embed them here.
+Screenshots are in `powerbi/`.
 
 ## Limitations
-Single snapshot dataset, no time dimension, and no cost data for retention offers,
-so recommendations are directional.
+- Single snapshot dataset with no time dimension, so churn timing cannot be modelled.
+- No cost data for retention offers, so the recommendation is directional and ROI is not estimated.
+- Public sample dataset: results are illustrative, not validated on live production data.
