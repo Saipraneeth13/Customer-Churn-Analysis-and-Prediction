@@ -2,7 +2,6 @@
 
 Which telecom customers are likely to leave, why, and what should the business do about it?
 
-![Power BI dashboard](powerbi/dashboard.png)
 
 **Tools:** Python (Pandas, Scikit-learn, Matplotlib), SQL (PostgreSQL), Power BI
 
