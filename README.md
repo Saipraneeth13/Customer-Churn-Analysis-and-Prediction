@@ -1,5 +1,13 @@
 # Customer Churn Analysis and Prediction
 
+## Live Dashboard
+
+Explore the interactive RETAINIQ Customer Churn Analysis dashboard:
+
+[**Launch RETAINIQ Dashboard**](PASTE_YOUR_STREAMLIT_URL_HERE)
+
+Built with Streamlit, Python, and machine learning to analyze customer churn, identify high-risk customers, and explore churn drivers.
+
 Which telecom customers are likely to leave, why, and what should the business do about it?
 
 
