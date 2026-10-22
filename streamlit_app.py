@@ -868,10 +868,10 @@ with tab_model:
             </div>
         """, unsafe_allow_html=True)
 
-        rf_imp = ml_service.get_rf_feature_importance()[:8]
+        rf_imp = ml_service.get_feature_importance("rf")[:8]
         if rf_imp:
             imp_df = pd.DataFrame([
-                {"Feature": item.feature, "Importance": item.importance}
+                {"Feature": item.label if item.label else item.feature, "Importance": item.importance}
                 for item in rf_imp
             ]).sort_values(by="Importance", ascending=True)
 

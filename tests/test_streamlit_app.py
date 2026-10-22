@@ -157,7 +157,7 @@ def test_csv_export_format():
 
 
 def test_held_out_model_evaluation_metrics():
-    """Verify distinct held-out test split metrics (0.835 ROC-AUC)."""
+    """Verify distinct held-out test split metrics (0.835 ROC-AUC) and feature importance."""
     metrics = ml_service.get_model_metrics()
     assert "Logistic Regression" in metrics
     assert "Random Forest" in metrics
@@ -165,3 +165,20 @@ def test_held_out_model_evaluation_metrics():
     assert round(metrics["Logistic Regression"].roc_auc, 3) == 0.835
     assert round(metrics["Random Forest"].roc_auc, 3) == 0.835
     assert metrics["Logistic Regression"].recall >= 0.80
+
+    # Verify Random Forest feature importance used by Streamlit dashboard
+    rf_imp = ml_service.get_feature_importance("rf")
+    assert isinstance(rf_imp, list)
+    assert len(rf_imp) >= 8
+    for item in rf_imp[:8]:
+        assert item.importance > 0
+        assert item.feature is not None
+        assert item.label is not None
+    top_labels = [item.label for item in rf_imp[:5]]
+    assert "Contract: Month-to-month" in top_labels or "tenure" in top_labels
+
+    # Verify Logistic Regression coefficients
+    lr_coefs = ml_service.get_feature_importance("lr")
+    assert isinstance(lr_coefs, list)
+    assert len(lr_coefs) >= 8
+
