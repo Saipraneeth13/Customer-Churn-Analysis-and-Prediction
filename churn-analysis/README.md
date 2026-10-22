@@ -1,5 +1,14 @@
 # Customer Churn Analysis and Prediction
 
+
+## Live Dashboard
+
+Explore the interactive RETAINIQ Customer Churn Analysis dashboard:
+
+[**Launch RETAINIQ Dashboard**](PASTE_YOUR_STREAMLIT_URL_HERE)
+
+Built with Streamlit, Python, and machine learning to analyze customer churn, identify high-risk customers, and explore churn drivers.
+
 **Identify customers likely to leave, understand why they churn, and recommend data-driven retention strategies.**
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue)](https://www.python.org/)
