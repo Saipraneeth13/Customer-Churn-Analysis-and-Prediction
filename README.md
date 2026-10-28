@@ -1,5 +1,7 @@
 # RETAINIQ: Premium Customer Retention Command Center
 
+[**View Live Dashboard →**](https://customer-churn-analysis-and-prediction-raqqjw9alfpe4ryrldg2kp.streamlit.app/)
+
 > **Tagline:** *Predict churn. Understand risk. Protect customer value.*
 
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
